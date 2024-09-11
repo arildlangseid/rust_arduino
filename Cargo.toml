@@ -22,7 +22,7 @@ rev = "3b8f39fa2ec5e3359c7bedc33d982e75e8cc3700"
 features = ["arduino-uno"]
 
 [build-dependencies]
-bindgen = "0.61"
+bindgen = "0.69.4"
 cc = "1.0.74"
 envmnt = "0.10.4"
 glob = "0.3"

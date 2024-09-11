@@ -5,8 +5,12 @@ variant: eightanaloginputs
 avr_gcc_version: 7.3.0-atmel3.6.1-arduino7
 arduino_libraries:
   - Wire
+  - SPI
 external_libraries:
   - LiquidCrystal_I2C
+  - Adafruit_BusIO
+  - Adafruit_GFX_Library
+  - Adafruit_SSD1306
 definitions:
   ARDUINO: '10807'
   F_CPU: 16000000L
@@ -14,14 +18,18 @@ definitions:
   ARDUINO_ARCH_AVR: '1'
 flags:
   - '-mmcu=atmega328p'
+  - '-Wno-unused-parameter'
 bindgen_lists:
   allowlist_function:
     - LiquidCrystal_I2C.*
+    - Adafruit_BusIO.Adafruit_I2CDevice.*
+    - Adafruit_GFX_Library.*
+    - Adafruit_SSD1306.*
   allowlist_type:
     - LiquidCrystal_I2C.*
+    - Adafruit_BusIO.Adafruit_I2CDevice.*
+    - Adafruit_GFX_Library.*
+    - Adafruit_SSD1306.*
   blocklist_function:
-    - Print.*
-    - String.*
+    - Adafruit_SSD1306_drawPixel.*
   blocklist_type:
-    - Print.*
-    - String.*

@@ -1,4 +1,4 @@
-use bindgen::{Bindings, Builder};
+use bindgen::{Bindings, Builder, CargoCallbacks};
 use cc::Build;
 use glob::glob;
 use serde::Deserialize;
@@ -171,20 +171,32 @@ fn compile_arduino(config: &Config) {
         .flag("-std=gnu++11")
         .flag("-fpermissive")
         .flag("-fno-threadsafe-statics");
+
     add_source_file(&mut builder, config.cpp_files());
 
+    println!("cargo:warning=******************************************************");
+    println!("cargo:warning=***********************   1   ************************");
+    println!("cargo:warning=******************************************************");
     builder.compile("libarduino_c++.a");
+    println!("cargo:warning=***********************   2   ************************");
     println!("cargo:rustc-link-lib=static=arduino_c++");
+
+    println!("cargo:warning=***********************   3   ************************");
 
     let mut builder = configure_arduino(&config);
     builder.flag("-std=gnu11");
     add_source_file(&mut builder, config.c_files());
+    println!("cargo:warning=***********************   4   ************************");
     builder.compile("libarduino_c.a");
+    println!("cargo:warning=***********************   5   ************************");
     println!("cargo:rustc-link-lib=static=arduino_c");
+
+    println!("cargo:warning=***********************   6   ************************");
 }
 
 fn configure_bindgen_for_arduino(config: &Config) -> Builder {
     let mut builder = Builder::default();
+    println!("cargo:warning=***********************   7   ************************");
     for (k, v) in &config.definitions {
         builder = builder.clang_arg(&format!("-D{}={}", k, v));
     }
@@ -195,7 +207,7 @@ fn configure_bindgen_for_arduino(config: &Config) -> Builder {
         .clang_args(&["-x", "c++", "-std=gnu++11"])
         .use_core()
         .layout_tests(false)
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks));
+        .parse_callbacks(Box::new(CargoCallbacks::new()));
 
     for item in &config.bindgen_lists.allowlist_function {
         builder = builder.allowlist_function(item);
