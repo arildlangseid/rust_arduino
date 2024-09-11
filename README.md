@@ -1,6 +1,6 @@
 # Example of an Arduino library usage in a Rust project
 
-The project tested with Arduino UNO on Fedora 35.  
+The project tested with Arduino UNO on Ubuntu 24.04.1 LTS.  
 It demonstrates the usage of [LiquidCrystal_I2C](https://github.com/johnrickman/LiquidCrystal_I2C) 
 with rust project to control I2C Text Display from Rust. 
 It also shows how to combine it with existing Arduino rust crates.
@@ -10,22 +10,31 @@ This is the source code for [Five simple steps to use any Arduino C++ library in
 
 ## Project setup
 
+- Install curl to install rust by rustup and other prerequisites
+```sh
+sudo apt install curl git libudev-dev libclang-dev
+```
 - Install avr toolchain and avrdude
 ```sh
-sudo dnf install avrdude avr-gcc avr-libc
+sudo apt install gcc avrdude gcc-avr avr-libc
 ```
 - Install dependencies to compile ``ravedude``
 ```sh
-sudo dnf install systemd-devel pkgconf-pkg-config
+sudo apt install systemd-dev pkg-config
+```
+- Install ``bindgen`` dependencies:
+```
+sudo apt install libudev-dev libclang-dev
+```
+- Install Rust (& Cargo)
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 - Install  ``ravedude``:
 ```sh
 cargo install ravedude
 ```
-- Install ``bindgen`` dependencies:
-```
-sudo dnf install clang-devel
-```
+
 - Install arduino IDE and validate it is working by compiling a simple sketch.
 - Install [LiquidCrystal_I2C](https://github.com/johnrickman/LiquidCrystal_I2C) library to Arduino Libraries folder
 (manually or using Arduino IDE like you would normally do)
