@@ -233,6 +233,7 @@ fn configure_bindgen_for_arduino(config: &Config) -> Builder {
 
 fn generate_bindings(config: &Config) {
     let bindings: Bindings = configure_bindgen_for_arduino(&config)
+        .formatter(bindgen::Formatter::Prettyplease)
         .generate()
         .expect("Unable to generate bindings");
     let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
