@@ -5,7 +5,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
-const CONFIG_FILE: &str = "arduino.yaml";
+const CONFIG_FILE: &str = "clibs_bindings.yaml";
 
 #[derive(Debug, Deserialize)]
 struct BindgenLists {
@@ -238,7 +238,7 @@ fn generate_bindings(config: &Config) {
         .expect("Unable to generate bindings");
     let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("src")
-        .join("arduino.rs");
+        .join("clibs_bindings.rs");
     bindings
         .write_to_file(project_root)
         .expect("Couldn't write bindings!");

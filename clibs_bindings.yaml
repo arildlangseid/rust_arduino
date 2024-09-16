@@ -32,4 +32,5 @@ bindgen_lists:
     - Adafruit_SSD1306.*
   blocklist_function:
     - Adafruit_SSD1306_drawPixel.*
+    - Adafruit_SSD1306_invertDisplay.*
   blocklist_type:
