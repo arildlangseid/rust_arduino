@@ -1,14 +1,14 @@
 [build]
 # Arduino Uno
-target = "avr-specs/avr-atmega328p.json"
+#target = "avr-specs/avr-atmega328p.json"
 # Arduino Leonardo
-#target = "avr-specs/avr-atmega32u4.json"
+target = "avr-specs/avr-atmega32u4.json"
 
 [target.'cfg(target_arch = "avr")']
 # Arduino Uno
-runner = "ravedude uno -cb 57600"
+#runner = "ravedude uno -cb 57600"
 # Arduino Leonardo
-#runner = "ravedude leonardo"
+runner = "ravedude leonardo"
 
 [unstable]
 build-std = ["core"]

@@ -26,7 +26,7 @@ static mut potLast: u16 = 0;
 
 #[arduino_hal::entry]
 unsafe fn main() -> ! {
-    init();
+//    init();
 
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
@@ -43,24 +43,24 @@ unsafe fn main() -> ! {
 //    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
     let mut two_wire = TwoWire::new();
     let ptr: *mut TwoWire = &mut two_wire;
-    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
+//    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
 
 
-    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
-    display.begin(0x02, 0x3c, true, true);
-    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
+//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
+//    display.begin(0x02, 0x3c, true, true);
+//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
 //    delay_ms(1000);
 //    display.invertDisplay(false);
 //    display.display();
-    display.clearDisplay();
-    display.drawPixel(30, 10, 1);
+//    display.clearDisplay();
+//    display.drawPixel(30, 10, 1);
 //    delay_ms(1000);
-    display.display();
+//    display.display();
 //    display.clearDisplay();
 
 //    display.invertDisplay();
 
-    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x27).unwrap();
+//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x27).unwrap();
 
 //    delay_ms(1000);
 //    display.invertDisplay(true);
@@ -100,13 +100,13 @@ unsafe fn main() -> ! {
         display.display();
 */
         //pot.analog_read(&mut adc);
-
+/*
         let test: u16 = adc.read_blocking(&mut pot);
 //        ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x27).void_unwrap();
         if ( i32::abs(test as i32 - potLast as i32) ) > 10 {
             potLast = test;
-            ufmt::uwriteln!(&mut serial, "starting on {}\r", potLast).unwrap();
+//            ufmt::uwriteln!(&mut serial, "starting on {}\r", potLast).unwrap();
         }
-
+*/
     }
 }
