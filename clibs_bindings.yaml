@@ -2,6 +2,10 @@ arduino_home: $HOME/.arduino15
 external_libraries_home: $HOME/Arduino/libraries
 core_version: 1.8.6
 variant: eightanaloginputs
+# Arduino Uno
+#variant: standard
+# Arduino Leonardo
+#variant: leonardo
 avr_gcc_version: 7.3.0-atmel3.6.1-arduino7
 arduino_libraries:
   - Wire
@@ -14,10 +18,18 @@ external_libraries:
 definitions:
   ARDUINO: '10807'
   F_CPU: 16000000L
-  ARDUINO_AVR_UNO: '1'
   ARDUINO_ARCH_AVR: '1'
+# Arduino Uno
+  ARDUINO_AVR_UNO: '1'
+# Arduino Leonardo
+#  ARDUINO_AVR_LEONARDO: '1'
+#  USB_VID: '0x2341'
+#  USB_PID: '0x0036'
 flags:
+# Arduino Uno
   - '-mmcu=atmega328p'
+# Arduino Leonardo
+#  - '-mmcu=atmega32u4'
   - '-Wno-unused-parameter'
 bindgen_lists:
   allowlist_function:
