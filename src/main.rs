@@ -43,7 +43,7 @@ unsafe fn main() -> ! {
 //    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
     let mut two_wire = TwoWire::new();
     let ptr: *mut TwoWire = &mut two_wire;
-//    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
+    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
 
 
 //    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
