@@ -24,6 +24,7 @@ embedded-hal = "1.0"
 git = "https://github.com/rahix/avr-hal"
 #rev = "3b8f39fa2ec5e3359c7bedc33d982e75e8cc3700"
 #rev = "3e362624547462928a219c40f9ea8e3a64f21e5f"
+rev = "544e50b"
 # Arduino Uno
 #features = ["arduino-uno"]
 # Arduino Leonardo
@@ -50,5 +51,5 @@ debug = true
 lto = true
 opt-level = "s"
 
-[build-dependencies.proc-macro2]
-version = "=1.0.79"
+#[build-dependencies.proc-macro2]
+#version = "=1.0.79"

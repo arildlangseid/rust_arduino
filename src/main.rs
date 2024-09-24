@@ -32,23 +32,24 @@ unsafe fn main() -> ! {
     let pins = arduino_hal::pins!(dp);
 
     let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
+//    println!("Waiting for Arduino Leonardo to be ready...");
+//    sleep(Duration::from_secs(2));
 
     let mut led = pins.d13.into_output();
 
-    let mut adc = arduino_hal::Adc::new(dp.ADC, Default::default());
-    let mut pot = pins.a0.into_analog_input(&mut adc);
-    potLast = adc.read_blocking(&mut pot);
+//    let mut adc = arduino_hal::Adc::new(dp.ADC, Default::default());
+//    let mut pot = pins.a0.into_analog_input(&mut adc);
+//    potLast = adc.read_blocking(&mut pot);
 
 //    #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 //    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-    let mut two_wire = TwoWire::new();
-    let ptr: *mut TwoWire = &mut two_wire;
-    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
+//    let mut two_wire = TwoWire::new();
+//    let ptr: *mut TwoWire = &mut two_wire;
+//    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
 
-
-//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
+    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
 //    display.begin(0x02, 0x3c, true, true);
-//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
+    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
 //    delay_ms(1000);
 //    display.invertDisplay(false);
 //    display.display();
@@ -105,8 +106,10 @@ unsafe fn main() -> ! {
 //        ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x27).void_unwrap();
         if ( i32::abs(test as i32 - potLast as i32) ) > 10 {
             potLast = test;
-//            ufmt::uwriteln!(&mut serial, "starting on {}\r", potLast).unwrap();
+            ufmt::uwriteln!(&mut serial, "starting on {}\r", potLast).unwrap();
         }
 */
+        ufmt::uwriteln!(&mut serial, "hello from loop {}\r", potLast).unwrap();
+
     }
 }

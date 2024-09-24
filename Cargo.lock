@@ -14,7 +14,7 @@ dependencies = [
 [[package]]
 name = "arduino-hal"
 version = "0.1.0"
-source = "git+https://github.com/rahix/avr-hal#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
+source = "git+https://github.com/rahix/avr-hal?rev=544e50b#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
 dependencies = [
  "atmega-hal",
  "avr-device",
@@ -28,7 +28,7 @@ dependencies = [
 [[package]]
 name = "atmega-hal"
 version = "0.1.0"
-source = "git+https://github.com/rahix/avr-hal#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
+source = "git+https://github.com/rahix/avr-hal?rev=544e50b#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
 dependencies = [
  "avr-device",
  "avr-hal-generic",
@@ -66,7 +66,7 @@ dependencies = [
 [[package]]
 name = "avr-hal-generic"
 version = "0.1.0"
-source = "git+https://github.com/rahix/avr-hal#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
+source = "git+https://github.com/rahix/avr-hal?rev=544e50b#544e50bdf2c1944281d9f63fa9ef3ccf68b5f684"
 dependencies = [
  "avr-device",
  "cfg-if",
@@ -93,7 +93,6 @@ dependencies = [
  "glob",
  "nb 1.1.0",
  "panic-halt",
- "proc-macro2",
  "serde",
  "serde_yaml",
  "ufmt",
