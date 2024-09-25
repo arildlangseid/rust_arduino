@@ -8,34 +8,74 @@
 
 mod clibs_bindings;
 mod clibs_bindings_patch;
-
+mod clibs_arduino;
 //use arduino::{LiquidCrystal_I2C, LiquidCrystal_I2C_write};
 
 use arduino_hal::delay_ms;
+//use arduino_hal::pac::USB_DEVICE;
 //use arduino_hal::prelude::*;
 use panic_halt as _;
-use crate::clibs_bindings::Adafruit_SSD1306;
-use crate::clibs_bindings::TwoWire;
+//use crate::clibs_bindings::Adafruit_SSD1306;
+//use crate::clibs_bindings::TwoWire;
+use crate::clibs_arduino::{USBDevice};
+use crate::clibs_bindings::{Mouse_};
 
+/*
 extern "C" {
     fn init();
 }
+*/
 
-static mut potLast: u16 = 0;
+//static mut potLast: u16 = 0;
 
 
 #[arduino_hal::entry]
 unsafe fn main() -> ! {
-//    init();
+    clibs_arduino::init();
+
+    let mut usbdevice = USBDevice::new();
+    usbdevice.attach();
 
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
+    let mut led = pins.d13.into_output();
 
-    let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
+    delay_ms(2000);
+    led.toggle();
+    delay_ms(200);
+    led.toggle();
+    delay_ms(200);
+    led.toggle();
+    delay_ms(200);
+    led.toggle();
+    delay_ms(200);
+    led.toggle();
+    delay_ms(200);
+    led.toggle();
+
+    let mut mouse = Mouse_::new();
+    mouse.begin();
+
+    loop {
+        led.toggle();
+        delay_ms(100);
+
+        mouse.move_(10,0,0);
+        delay_ms(500);
+        mouse.move_(-10,0,0);
+        delay_ms(500);
+
+        clibs_arduino::serialEventRun();
+    }
+
+    //    let dp = arduino_hal::Peripherals::take().unwrap();
+//    let pins = arduino_hal::pins!(dp);
+
+//    let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
 //    println!("Waiting for Arduino Leonardo to be ready...");
 //    sleep(Duration::from_secs(2));
 
-    let mut led = pins.d13.into_output();
+//    let mut led = pins.d13.into_output();
 
 //    let mut adc = arduino_hal::Adc::new(dp.ADC, Default::default());
 //    let mut pot = pins.a0.into_analog_input(&mut adc);
@@ -47,9 +87,30 @@ unsafe fn main() -> ! {
 //    let ptr: *mut TwoWire = &mut two_wire;
 //    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
 
-    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
+
+
+/*
+    let mut mouse = Mouse_::new();
+    mouse.begin();
+    mouse.move_(10,0,0);
+    delay_ms(500);
+    mouse.move_(-10,0,0);
+    delay_ms(500);
+*/
+
+//    if (serialEventRun) serialEventRun();
+
+/*
+    Mouse__begin();
+    Mouse__move(10,0,0);
+    delay_ms(500);
+    Mouse__move(-10,0,0);
+    delay_ms(500);
+*/
+
+//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x01).unwrap();
 //    display.begin(0x02, 0x3c, true, true);
-    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
+//    ufmt::uwriteln!(&mut serial, "starting on {}\r", 0x02).unwrap();
 //    delay_ms(1000);
 //    display.invertDisplay(false);
 //    display.display();
@@ -88,10 +149,10 @@ unsafe fn main() -> ! {
         LiquidCrystal_I2C_write((&mut lcd as *mut LiquidCrystal_I2C).cast(), 0);
     */
 
-    loop {
+//    loop {
 
-        led.toggle();
-        delay_ms(100);
+//        led.toggle();
+//        delay_ms(100);
 
 /*
         display.invertDisplay(true);
@@ -109,7 +170,6 @@ unsafe fn main() -> ! {
             ufmt::uwriteln!(&mut serial, "starting on {}\r", potLast).unwrap();
         }
 */
-        ufmt::uwriteln!(&mut serial, "hello from loop {}\r", potLast).unwrap();
-
-    }
+//        ufmt::uwriteln!(&mut serial, "hello from loop {}\r", potLast).unwrap();
+//    }
 }

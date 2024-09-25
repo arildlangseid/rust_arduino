@@ -47,3 +47,20 @@ impl Adafruit_SSD1306 {
     #[inline]
     pub unsafe fn invertDisplay(&mut self, i: bool) { Adafruit_SSD1306_invertDisplay(self, i) } // this: *mut ::core::ffi::c_void
 }
+
+/*
+#[allow(dead_code)]
+extern "C" {
+    #[link_name = "\u{1}_ZN16MousebeginEb"]
+    pub fn Mouse_begin(this: *mut Mouse);
+}
+
+#[allow(dead_code)]
+impl Mouse {
+    #[inline]
+    pub unsafe fn begin(&mut self) { Mouse_begin(self) } // this: *mut ::core::ffi::c_void
+}
+*/
+
+
+
