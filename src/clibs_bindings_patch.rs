@@ -1,5 +1,4 @@
-
-use crate::clibs_bindings::{Adafruit_SSD1306};
+use crate::clibs_bindings::{Adafruit_SSD1306, Serial_};
 
 #[allow(dead_code)]
 extern "C" {
@@ -48,19 +47,46 @@ impl Adafruit_SSD1306 {
     pub unsafe fn invertDisplay(&mut self, i: bool) { Adafruit_SSD1306_invertDisplay(self, i) } // this: *mut ::core::ffi::c_void
 }
 
-/*
-#[allow(dead_code)]
+
 extern "C" {
-    #[link_name = "\u{1}_ZN16MousebeginEb"]
-    pub fn Mouse_begin(this: *mut Mouse);
+    #[link_name = "\u{1}_ZN7Serial_cvbEv"]
+    pub fn Serial__Serial_(this: *mut Serial_);
 }
+
+extern "C" {
+    #[link_name = "\u{1}_ZN7Serial_5writeEh"]
+    pub fn Serial__write(
+        this: *mut Serial_,
+        arg1: usize,
+    ) -> usize;
+}
+
+extern "C" {
+    #[link_name = "\u{1}_ZN7Serial_5writeEPKhj"]
+    pub fn Serial__write1(
+        this: *mut Serial_,
+        arg1: *const u8,
+        arg2: usize,
+    ) -> usize;
+}
+
 
 #[allow(dead_code)]
-impl Mouse {
+impl Serial_ {
     #[inline]
-    pub unsafe fn begin(&mut self) { Mouse_begin(self) } // this: *mut ::core::ffi::c_void
+    pub unsafe fn new() -> Self {
+        let mut __bindgen_tmp = ::core::mem::MaybeUninit::uninit();
+        Serial__Serial_(__bindgen_tmp.as_mut_ptr());
+        __bindgen_tmp.assume_init()
+    }
+
+    #[inline]
+    pub unsafe fn write(&mut self, arg1: usize) -> usize{
+        Serial__write(self, arg1)
+    }
+
+    #[inline]
+    pub unsafe fn write1(&mut self, arg1: *const u8, arg2: usize) -> usize{
+        Serial__write1(self, arg1, arg2)
+    }
 }
-*/
-
-
-

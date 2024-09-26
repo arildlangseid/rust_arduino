@@ -19,6 +19,7 @@ external_libraries:
   - Adafruit_GFX_Library
   - Adafruit_SSD1306
   - Mouse
+  - Serial
 definitions:
 #  ARDUINO: '10807'
   ARDUINO: '10607'
@@ -50,6 +51,7 @@ bindgen_lists:
     - Adafruit_GFX_Library.*
     - Adafruit_SSD1306.*
     - Mouse.*
+    - Serial.*
   allowlist_type:
 #    - LiquidCrystal_I2C.*
     - Adafruit_BusIO.Adafruit_I2CDevice.*
@@ -59,4 +61,6 @@ bindgen_lists:
   blocklist_function:
     - Adafruit_SSD1306_drawPixel.*
     - Adafruit_SSD1306_invertDisplay.*
+    - Serial__write.*
+    - Serial__write1.*
   blocklist_type:

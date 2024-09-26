@@ -18,7 +18,7 @@ use panic_halt as _;
 //use crate::clibs_bindings::Adafruit_SSD1306;
 //use crate::clibs_bindings::TwoWire;
 use crate::clibs_arduino::{USBDevice};
-use crate::clibs_bindings::{Mouse_};
+use crate::clibs_bindings::{Mouse_,Serial_};
 
 /*
 extern "C" {
@@ -53,8 +53,13 @@ unsafe fn main() -> ! {
     delay_ms(200);
     led.toggle();
 
+    let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
+
     let mut mouse = Mouse_::new();
     mouse.begin();
+
+    let mut serial2 = Serial_::new();
+    serial2.begin(56700);
 
     loop {
         led.toggle();
@@ -64,6 +69,10 @@ unsafe fn main() -> ! {
         delay_ms(500);
         mouse.move_(-10,0,0);
         delay_ms(500);
+
+        let x = "Hello\n".as_bytes();
+        let hello:*const u8 = x.as_ptr();
+        serial2.write1(hello,x.len());
 
         clibs_arduino::serialEventRun();
     }

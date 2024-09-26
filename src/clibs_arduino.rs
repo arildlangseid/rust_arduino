@@ -5,6 +5,7 @@
  readelf -sW 85ec323f8a4bcfb9-USBCore.o | grep FUNC
 
 */
+
 #[repr(C, packed)]
 pub struct USBDevice {
     pub dummy: i8
@@ -89,16 +90,3 @@ extern "C" {
     #[link_name = "\u{1}_Z14serialEventRunv"]
     pub fn serialEventRun();
 }
-/*
-#[allow(dead_code)]
-extern "C" {
-    #[link_name = "\u{1}_ZN10USBDevice_6attachEv"]
-    pub fn USBDevice_attach(this: *mut USBDevice);
-}
-extern "C" {
-    fn serialEventRun();
-}
-
-//serialEventRun()
-//_Z14serialEventRunv
-*/
