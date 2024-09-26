@@ -87,9 +87,7 @@ extern "C" {
 
 extern "C" {
     #[link_name = "\u{1}_Z14serialEventRunv"]
-    pub fn serialEventRun(
-
-    );
+    pub fn serialEventRun();
 }
 /*
 #[allow(dead_code)]
