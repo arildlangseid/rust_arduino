@@ -33,25 +33,13 @@ extern "C" {
 unsafe fn main() -> ! {
     clibs_arduino::init();
 
-    let mut usbdevice = USBDevice::new();
-    usbdevice.attach();
-
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
     let mut led = pins.d13.into_output();
 
-    delay_ms(2000);
-    led.toggle();
-    delay_ms(200);
-    led.toggle();
-    delay_ms(200);
-    led.toggle();
-    delay_ms(200);
-    led.toggle();
-    delay_ms(200);
-    led.toggle();
-    delay_ms(200);
-    led.toggle();
+    let mut usbdevice = USBDevice::new();
+    usbdevice.attach();
+    delay_ms(385+10);
 
     let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
 
@@ -66,9 +54,9 @@ unsafe fn main() -> ! {
         delay_ms(100);
 
         mouse.move_(10,0,0);
-        delay_ms(500);
+        delay_ms(2000);
         mouse.move_(-10,0,0);
-        delay_ms(500);
+        delay_ms(2000);
 
         let log_msg = "Hello\n".as_bytes();
         serial2.write1(log_msg.as_ptr(), log_msg.len());
