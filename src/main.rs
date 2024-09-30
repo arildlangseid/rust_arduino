@@ -70,9 +70,8 @@ unsafe fn main() -> ! {
         mouse.move_(-10,0,0);
         delay_ms(500);
 
-        let x = "Hello\n".as_bytes();
-        let hello:*const u8 = x.as_ptr();
-        serial2.write1(hello,x.len());
+        let log_msg = "Hello\n".as_bytes();
+        serial2.write1(log_msg.as_ptr(), log_msg.len());
 
         clibs_arduino::serialEventRun();
     }
