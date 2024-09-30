@@ -11,8 +11,6 @@ arduino_libraries:
   - Wire
   - SPI
   - HID
-#  - USBAPI
-#  - USBCore
 external_libraries:
 #  - LiquidCrystal_I2C
   - Adafruit_BusIO
