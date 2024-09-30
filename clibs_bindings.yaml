@@ -41,9 +41,6 @@ flags:
 #  - '-Wno-unused-parameter'
   - '-DUSB_MANUFACTURER="Unknown"'
   - '-DUSB_PRODUCT="Arduino Leonardo"'
-  - '-MMD'
-  - '-flto'
-  - '-fno-fat-lto-objects'
 bindgen_lists:
   allowlist_function:
 #    - LiquidCrystal_I2C.*
