@@ -14,7 +14,7 @@ bench = false
 panic-halt = "0.2.0"
 ufmt = "0.2.0"
 nb = "1.1.0"
-embedded-hal = "1.0"
+embedded-hal = "1.0.0"
 
 #[dependencies.embedded-hal-v0]
 #version = "0.2.3"
@@ -22,8 +22,6 @@ embedded-hal = "1.0"
 
 [dependencies.arduino-hal]
 git = "https://github.com/rahix/avr-hal"
-#rev = "3b8f39fa2ec5e3359c7bedc33d982e75e8cc3700"
-#rev = "3e362624547462928a219c40f9ea8e3a64f21e5f"
 rev = "544e50b"
 # Arduino Uno
 #features = ["arduino-uno"]
@@ -32,11 +30,17 @@ features = ["arduino-leonardo"]
 
 [build-dependencies]
 bindgen = "0.70.1"
-cc = "1.1.21"
+# The stock cc crate will apply the unsupported -fPIC parameter to the avr-gcc/avr-g++ yelding lots of warnings while building arduino C/C++.
+# Uncomment this if you do not have cloned https://github.com/rust-lang/cc-rs/tree/main and modified lib.rs to not add the non-supported fPIC parameter to avr-g++
+#cc = "1.1.24"
 envmnt = "0.10.4"
 glob = "0.3.1"
 serde = { version = "1.0.210", features = ["derive"] }
 serde_yaml = "0.9"
+
+# Use this if you have cloned repo cc-rs and modified lib.rs line by adding && !target.contains("avr") as new line 2003 (version 1.1.24)
+[build-dependencies.cc]
+path = "../cc-rs"
 
 # Configure the build for minimal size - AVRs have very little program memory
 [profile.dev]

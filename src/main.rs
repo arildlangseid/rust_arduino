@@ -4,64 +4,129 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+
 #[allow(dead_code)]
 
 mod clibs_bindings;
 mod clibs_bindings_patch;
-mod clibs_arduino;
+mod clibs_local_bindings;
+//mod clibs_arduino;
 //use arduino::{LiquidCrystal_I2C, LiquidCrystal_I2C_write};
 
 use arduino_hal::delay_ms;
 //use arduino_hal::pac::USB_DEVICE;
 //use arduino_hal::prelude::*;
 use panic_halt as _;
-//use crate::clibs_bindings::Adafruit_SSD1306;
-//use crate::clibs_bindings::TwoWire;
-use crate::clibs_arduino::{USBDevice};
+use crate::clibs_bindings::Adafruit_SSD1306;
+use crate::clibs_bindings::TwoWire;
 use crate::clibs_bindings::{Mouse_,Serial_};
+use crate::clibs_local_bindings::*;
+
+
+static mut potLast: u16 = 0;
+
+
 
 /*
-extern "C" {
-    fn init();
+size_t Print::printNumber(unsigned long n, uint8_t base)
+{
+char buf[8 * sizeof(long) + 1]; // Assumes 8-bit chars plus zero byte.
+char *str = &buf[sizeof(buf) - 1];
+
+*str = '\0';
+
+// prevent crash if called with base == 1
+if (base < 2) base = 10;
+
+do {
+char c = n % base;
+n /= base;
+
+*--str = c < 10 ? c + '0' : c + 'A' - 10;
+} while(n);
+
+return write(str);
 }
 */
 
-//static mut potLast: u16 = 0;
-
+unsafe fn initialize_arduino() {
+    arduino_init();
+    arduino_attachUSB();
+    delay_ms(385+10); // Just obey this magic code for now... 385ms + 10ms margin
+}
 
 #[arduino_hal::entry]
 unsafe fn main() -> ! {
-    clibs_arduino::init();
+    initialize_arduino();
+
+
+//    let mut serial2 = Serial_::new();
+//    serial2.begin(56700);
+
+    //    while !check_serial() {
+    //    }
+    check_serial();
+    //    let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
 
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
     let mut led = pins.d13.into_output();
 
-    let mut usbdevice = USBDevice::new();
-    usbdevice.attach();
-    delay_ms(385+10);
-
-    let mut serial = arduino_hal::default_serial!(dp, pins, 57600);
-
     let mut mouse = Mouse_::new();
     mouse.begin();
 
-    let mut serial2 = Serial_::new();
-    serial2.begin(56700);
+/*
+    while serial2.test() {
+        led.toggle();
+        delay_ms(500);
+    }
+    while !serial2.test() {
+        led.toggle();
+        delay_ms(1000);
+    }
+*/
+
+    let mut adc = arduino_hal::Adc::new(dp.ADC, Default::default());
+    let mut pot = pins.a0.into_analog_input(&mut adc);
+    potLast = adc.read_blocking(&mut pot);
+
+    //    #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+    //    Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+    let mut two_wire = TwoWire::new();
+    let ptr: *mut TwoWire = &mut two_wire;
+    let mut display = Adafruit_SSD1306::new(128,64,ptr,-1, 400000, 100000);
+    display.begin(0x02, 0x3c, true, true);
+    display.clearDisplay();
+    display.display();
 
     loop {
         led.toggle();
         delay_ms(100);
+
+        display.drawPixel( 127, 63, 1);
+
+        let mut xpos :i16 = 127-(potLast as i16)/((1023)/128);
+        display.drawPixel( xpos, 10, 0);
+        let test: u16 = adc.read_blocking(&mut pot);
+        xpos = 127-(test as i16)/((1023)/128);
+        display.drawPixel(xpos, 10, 1);
+        display.display();
+        potLast = test;
 
         mouse.move_(10,0,0);
         delay_ms(2000);
         mouse.move_(-10,0,0);
         delay_ms(2000);
 
-        let log_msg = "Hello\n".as_bytes();
-        serial2.write1(log_msg.as_ptr(), log_msg.len());
+//        let message2 :&str = xpos as str;
 
-        clibs_arduino::serialEventRun();
+//        let str_value :str= string::from(xpos);
+/*
+        let message :&str = "Hello\n";
+        let log_msg :&[u8] = message.as_bytes();
+        serial2.write1(log_msg.as_ptr(), log_msg.len());
+*/
+        arduino_serialEventRun();
     }
 
     //    let dp = arduino_hal::Peripherals::take().unwrap();
@@ -169,3 +234,4 @@ unsafe fn main() -> ! {
 //        ufmt::uwriteln!(&mut serial, "hello from loop {}\r", potLast).unwrap();
 //    }
 }
+

@@ -32,11 +32,12 @@ definitions:
   USB_VID: '0x2341'
   USB_PID: '0x8036'
 flags:
+# Suppress unused parameters in arduino-code
+  - '-Wno-unused-parameter'
 # Arduino Uno
 #  - '-mmcu=atmega328p'
 # Arduino Leonardo
   - '-mmcu=atmega32u4'
-#  - '-Wno-unused-parameter'
   - '-DUSB_MANUFACTURER="Unknown"'
   - '-DUSB_PRODUCT="Arduino Leonardo"'
 bindgen_lists:
@@ -59,3 +60,9 @@ bindgen_lists:
     - Serial__write.*
     - Serial__write1.*
   blocklist_type:
+bindgen_local_lists:
+  allowlist_function:
+    - arduino_init
+    - arduino_attachUSB
+    - arduino_serialEventRun
+    - check_serial

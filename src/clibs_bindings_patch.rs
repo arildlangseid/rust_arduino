@@ -49,6 +49,11 @@ impl Adafruit_SSD1306 {
 
 
 extern "C" {
+//    #[link_name = "\u{1}_ZTV7Serial_"]
+    #[link_name = "\u{1}Serial"]
+    pub fn Serial__Serial_Serial(this: *mut Serial_) -> bool;
+}
+extern "C" {
     #[link_name = "\u{1}_ZN7Serial_cvbEv"]
     pub fn Serial__Serial_(this: *mut Serial_);
 }
@@ -78,6 +83,11 @@ impl Serial_ {
         let mut __bindgen_tmp = ::core::mem::MaybeUninit::uninit();
         Serial__Serial_(__bindgen_tmp.as_mut_ptr());
         __bindgen_tmp.assume_init()
+    }
+
+    #[inline]
+    pub unsafe fn test(&mut self) -> bool{
+        Serial__Serial_Serial(self)
     }
 
     #[inline]
