@@ -9,7 +9,7 @@
 
 mod clibs_bindings;
 mod clibs_bindings_patch;
-mod clibs_local_bindings;
+mod clibs_arduino_helper_bindings;
 //mod clibs_arduino;
 //use arduino::{LiquidCrystal_I2C, LiquidCrystal_I2C_write};
 
@@ -20,7 +20,7 @@ use panic_halt as _;
 use crate::clibs_bindings::Adafruit_SSD1306;
 use crate::clibs_bindings::TwoWire;
 use crate::clibs_bindings::{Mouse_,Serial_};
-use crate::clibs_local_bindings::*;
+use crate::clibs_arduino_helper_bindings::*;
 
 
 static mut potLast: u16 = 0;

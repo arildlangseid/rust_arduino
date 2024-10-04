@@ -5,6 +5,9 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
 
+//mod build_arduino_helper;
+//use crate::build_arduino_helper::*;
+
 const CONFIG_FILE: &str = "clibs_bindings.yaml";
 
 #[derive(Debug, Deserialize)]
@@ -15,7 +18,7 @@ struct BindgenLists {
     pub blocklist_type: Vec<String>,
 }
 #[derive(Debug, Deserialize)]
-struct BindgenLocalLists {
+struct BindgenArduinoHelperLists {
     pub allowlist_function: Vec<String>,
 }
 
@@ -31,12 +34,12 @@ struct Config {
     pub definitions: HashMap<String, String>,
     pub flags: Vec<String>,
     pub bindgen_lists: BindgenLists,
-    pub bindgen_local_lists: BindgenLocalLists,
+    pub bindgen_arduino_helper_lists: BindgenArduinoHelperLists,
 }
 
 impl Config {
     fn local_path(&self) -> PathBuf {
-        let expanded = "/home/arild/dev/git/rust_arduino/";
+        let expanded = "./";
         let arduino_home_path = PathBuf::from(expanded);
         arduino_home_path.join("src_c")
     }
@@ -101,8 +104,8 @@ impl Config {
         result
     }
 
-    fn include_arduino_dirs(&self) -> Vec<PathBuf> {
-        let expanded = envmnt::expand("/home/arild/dev/git/rust_arduino/src_c", None);
+    fn include_arduino_helper_dirs(&self) -> Vec<PathBuf> {
+        let expanded = envmnt::expand("./src_c", None);
         let arduino_home_path = PathBuf::from(expanded);
 
         let mut result = self.arduino_include_dirs();
@@ -126,9 +129,9 @@ impl Config {
         result
     }
 
-    fn project_arduino_files(&self, patten: &str) -> Vec<PathBuf> {
-        let mut result = files_in_folder(self.local_path().to_string_lossy().as_ref(), patten);
-        if crate::debug_print_local() { println!("cargo:warning=********************   project_arduino_files  ******************** {}", self.local_path().to_string_lossy()); }
+    fn project_arduino_helper_files(&self, patten: &str) -> Vec<PathBuf> {
+        let result = files_in_folder(self.local_path().to_string_lossy().as_ref(), patten);
+        if crate::debug_print_arduino_helper() { println!("cargo:warning=********************   project_arduino_files  ******************** {}", self.local_path().to_string_lossy()); }
 
 //        let libraries = self.arduino_libraries_path();
 
@@ -145,8 +148,8 @@ impl Config {
     fn cpp_files(&self) -> Vec<PathBuf> {
         self.project_files("*.cpp")
     }
-    fn cpp_arduino_files(&self) -> Vec<PathBuf> {
-        self.project_arduino_files("*.cpp")
+    fn cpp_arduino_helper_files(&self) -> Vec<PathBuf> {
+        self.project_arduino_helper_files("*.cpp")
     }
 
 
@@ -154,9 +157,10 @@ impl Config {
         self.project_files("*.c")
     }
 
-    fn c_arduino_files(&self) -> Vec<PathBuf> {
-        self.project_arduino_files("*.c")
-    }
+    // c_arduino_helper_files is not used until we need to compile c sourvce
+    //fn c_arduino_helper_files(&self) -> Vec<PathBuf> {
+    //    self.project_arduino_helper_files("*.c")
+    //}
 
     fn bindgen_headers(&self) -> Vec<PathBuf> {
         let mut result = vec![];
@@ -166,7 +170,7 @@ impl Config {
         }
         result
     }
-    fn bindgen_local_headers(&self) -> Vec<PathBuf> {
+    fn bindgen_arduino_helper_headers(&self) -> Vec<PathBuf> {
 /*
         fn external_libraries_path()
         let expanded = envmnt::expand(&self.external_libraries_home, None);
@@ -184,13 +188,13 @@ impl Config {
             result.extend(lib_headers);
         }
 */
-        let lib_headers = files_in_folder("/home/arild/dev/git/rust_arduino/src_c/", "*.h");
+        let lib_headers = files_in_folder("./src_c/", "*.h");
         result.extend(lib_headers);
 
         for header in &result {
-            if crate::debug_print_local() { println!("cargo:warning=********************   header    ********************* {}", header.to_string_lossy()); }
-
+            if crate::debug_print_arduino_helper() { println!("cargo:warning=********************   header    ********************* {}", header.to_string_lossy()); }
         }
+
         result
     }
 }
@@ -237,10 +241,10 @@ fn configure_arduino(config: &Config) -> Build {
 }
 
 fn debug_print() -> bool {
-    return false;
+    false
 }
-fn debug_print_local() -> bool {
-    return false;
+fn debug_print_arduino_helper() -> bool {
+    false
 }
 fn compile_arduino(config: &Config) {
     if debug_print() { println!("cargo:warning=***********************   1   ************************"); }
@@ -327,15 +331,15 @@ fn generate_bindings(config: &Config) {
         Build Local C Lib
 
  */
-fn configure_local_arduino(config: &Config) -> Build {
+fn configure_arduino_helper(config: &Config) -> Build {
     let mut builder = Build::new();
     for (k, v) in &config.definitions {
         builder.define(k, v.as_str());
-        if debug_print_local() { println!("cargo:warning=******************   definitions   ******************* {}: {}", k.as_str(), v.as_str()); }
+        if debug_print_arduino_helper() { println!("cargo:warning=******************   definitions   ******************* {}: {}", k.as_str(), v.as_str()); }
     }
     for flag in &config.flags {
         builder.flag(flag);
-        if debug_print_local() { println!("cargo:warning=*********************   flags   ********************** {}", flag.as_str()); }
+        if debug_print_arduino_helper() { println!("cargo:warning=*********************   flags   ********************** {}", flag.as_str()); }
     }
     builder
         .compiler(config.avg_gcc())
@@ -345,46 +349,46 @@ fn configure_local_arduino(config: &Config) -> Build {
         .flag("-ffunction-sections")
         .flag("-fdata-sections");
 
-    for include_dir in config.include_arduino_dirs() {
+    for include_dir in config.include_arduino_helper_dirs() {
         builder.include(include_dir.clone());
-        if debug_print_local() { println!("cargo:warning=******************   include_dir   ******************* {}", include_dir.to_string_lossy().to_string()); }
+        if debug_print_arduino_helper() { println!("cargo:warning=******************   include_dir   ******************* {}", include_dir.to_string_lossy().to_string()); }
     }
     builder
 }
 
-fn compile_local_arduino(config: &Config) {
-    if debug_print_local() { println!("cargo:warning=***********************   A   ************************"); }
-    let mut builder = configure_local_arduino(&config);
+fn compile_arduino_helper_lib(config: &Config) {
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   A   ************************"); }
+    let mut builder = configure_arduino_helper(&config);
     builder
         .cpp(true)
         .flag("-std=gnu++11")
         .flag("-fpermissive")
         .flag("-fno-threadsafe-statics");
 
-    if debug_print_local() { println!("cargo:warning=***********************   B   ************************"); }
-    add_source_file(&mut builder, config.cpp_arduino_files());
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   B   ************************"); }
+    add_source_file(&mut builder, config.cpp_arduino_helper_files());
 
-    if debug_print_local() { println!("cargo:warning=***********************   C   ************************"); }
-    builder.compile("libarduinocore_c++.a");
-    if debug_print_local() { println!("cargo:warning=***********************   D   ************************"); }
-    println!("cargo:rustc-link-lib=static=arduinocore_c++");
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   C   ************************"); }
+    builder.compile("libarduinohelper_c++.a");
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   D   ************************"); }
+    println!("cargo:rustc-link-lib=static=arduinohelper_c++");
 
-    if debug_print_local() { println!("cargo:warning=***********************   E   ************************"); }
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   E   ************************"); }
 
-//    let mut builder = configure_local_arduino(&config);
-    //    builder.flag("-std=gnu11");
-    //add_source_file(&mut builder, config.c_arduino_files());
-    //if debug_print_local() { println!("cargo:warning=***********************   F   ************************"); }
-    //builder.compile("libarduinocore_c.a");
-    //if debug_print_local() { println!("cargo:warning=***********************   G   ************************"); }
-    //println!("cargo:rustc-link-lib=static=arduinocore_c");
-
-    if debug_print_local() { println!("cargo:warning=***********************   H   ************************"); }
+    // uncomment if building c source
+    //let mut builder = configure_local_arduino(&config);
+    //builder.flag("-std=gnu11");
+    //add_source_file(&mut builder, config.c_arduino_helper_files());
+    //if debug_print_arduino_helper() { println!("cargo:warning=***********************   F   ************************"); }
+    //builder.compile("libarduinohelper_c.a");
+    //if debug_print_arduino_helper() { println!("cargo:warning=***********************   G   ************************"); }
+    //println!("cargo:rustc-link-lib=static=arduinohelper_c");
+    //if debug_print_arduino_helper() { println!("cargo:warning=***********************   H   ************************"); }
 }
 
-fn configure_local_bindgen_for_arduino(config: &Config) -> Builder {
+fn configure_bindgen_for_arduino_helper(config: &Config) -> Builder {
     let mut builder = Builder::default();
-    if debug_print_local() { println!("cargo:warning=***********************   I   ************************"); }
+    if debug_print_arduino_helper() { println!("cargo:warning=***********************   I   ************************"); }
     for (k, v) in &config.definitions {
         builder = builder.clang_arg(&format!("-D{}={}", k, v));
     }
@@ -397,9 +401,9 @@ fn configure_local_bindgen_for_arduino(config: &Config) -> Builder {
         .layout_tests(false)
         .parse_callbacks(Box::new(CargoCallbacks::new()));
 
-    for item in &config.bindgen_local_lists.allowlist_function {
+    for item in &config.bindgen_arduino_helper_lists.allowlist_function {
         builder = builder.allowlist_function(item);
-        if debug_print_local() { println!("cargo:warning=*******************   allowList   ******************** {}", item.to_string()); }
+        if debug_print_arduino_helper() { println!("cargo:warning=*******************   allowList   ******************** {}", item.to_string()); }
     }
 /*
     for item in &config.bindgen_lists.allowlist_type {
@@ -412,24 +416,24 @@ fn configure_local_bindgen_for_arduino(config: &Config) -> Builder {
         builder = builder.blocklist_type(item);
     }
 */
-    for include_dir in config.include_arduino_dirs() {
+    for include_dir in config.include_arduino_helper_dirs() {
         builder = builder.clang_arg(&format!("-I{}", include_dir.to_string_lossy()));
-        if debug_print_local() { println!("cargo:warning=******************   include_dir   ******************* {}", include_dir.to_string_lossy().to_string()); }
+        if debug_print_arduino_helper() { println!("cargo:warning=******************   include_dir   ******************* {}", include_dir.to_string_lossy().to_string()); }
     }
-    for header in config.bindgen_local_headers() {
+    for header in config.bindgen_arduino_helper_headers() {
         builder = builder.header(header.to_string_lossy());
     }
     builder
 }
 
-fn generate_local_bindings(config: &Config) {
-    let bindings: Bindings = configure_local_bindgen_for_arduino(&config)
+fn generate_arduino_helper_bindings(config: &Config) {
+    let bindings: Bindings = configure_bindgen_for_arduino_helper(&config)
         .formatter(bindgen::Formatter::Prettyplease)
         .generate()
         .expect("Unable to generate local bindings");
     let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("src")
-        .join("clibs_local_bindings.rs");
+        .join("clibs_arduino_helper_bindings.rs");
     bindings
         .write_to_file(project_root)
         .expect("Couldn't write local bindings!");
@@ -447,9 +451,9 @@ fn main() {
     compile_arduino(&config);
     generate_bindings(&config);
 
-    compile_local_arduino(&config);
-    generate_local_bindings(&config);
+    compile_arduino_helper_lib(&config);
+    generate_arduino_helper_bindings(&config);
 
-    cc::Build::new().file("src_c/arduino_helper_lib.h");
+    //build_arduino_helper();
 
 }
