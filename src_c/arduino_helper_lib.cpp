@@ -2,6 +2,10 @@
 
 #include "Arduino.h"
 
+/*
+    Helper functions to simplify initialization like arduino ide
+*/
+
 void arduino_init() {
     init();
 }

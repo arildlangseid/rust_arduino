@@ -53,23 +53,7 @@ impl Config {
 
 
     fn bindgen_arduino_helper_headers(&self) -> Vec<PathBuf> {
-        /*
-                fn external_libraries_path()
-                let expanded = envmnt::expand(&self.external_libraries_home, None);
-                let external_library_root = PathBuf::from(expanded);
-                let mut result = vec![];
-                for library in &self.external_libraries {
-                    result.push(external_library_root.join(library))
-                }
-                result
-        */
         let mut result = vec![];
-        /*
-                for library in self.external_libraries_path() {
-                    let lib_headers = files_in_folder(library.to_string_lossy().as_ref(), "*.h");
-                    result.extend(lib_headers);
-                }
-        */
         let lib_headers = files_in_folder("./src_c/", "*.h");
         result.extend(lib_headers);
 
